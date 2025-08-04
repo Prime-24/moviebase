@@ -23,6 +23,7 @@ export async function GET(request: Request) {
     const data = await response.json();
     return NextResponse.json(data);
   } catch (err) {
+    console.error("TMDB API Error:", err);
     return NextResponse.json(
       { error: "Failed to fetch discover movies" },
       { status: 500 }

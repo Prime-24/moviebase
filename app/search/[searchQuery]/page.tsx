@@ -36,13 +36,13 @@ const SearchQueryPage = async ({
         image: item.poster_path,
       };
     }
-    if (item.media_type === "person") {
-      return {
-        type: "Person",
-        path: `/person/${item.id}`,
-        image: item.profile_path,
-      };
-    }
+    // if (item.media_type === "person") {
+    return {
+      type: "Person",
+      path: `/person/${item.id}`,
+      image: item.profile_path,
+    };
+    // }
   };
   return (
     <>
@@ -50,11 +50,11 @@ const SearchQueryPage = async ({
         {data?.results?.map((m: Media) => (
           <Link
             key={m.id}
-            href={getMediaInfo(m)?.path!}
+            href={getMediaInfo(m)?.path}
             className="flex flex-col gap-2 glass rounded-md shadow-md border border-transparent hover:border-white hover:cursor-pointer">
             <Image
               className="w-full object-cover rounded-t-md flex-[2]"
-              src={imageUrlHelper(getMediaInfo(m)?.image!)}
+              src={imageUrlHelper(getMediaInfo(m)?.image)}
               height={150}
               width={100}
               alt="Image of popular media"

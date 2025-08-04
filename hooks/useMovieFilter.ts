@@ -1,3 +1,4 @@
+"use client";
 import { Filters, TMDBSortBy } from "@/types/Filters";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent } from "react";

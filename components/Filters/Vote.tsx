@@ -15,7 +15,7 @@ const Vote = ({ name, defaultValue, label }: VoteProps) => {
   }, [defaultValue]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setVote((prev) => (prev = Number(e.target.value)));
+    setVote(Number(e.target.value));
   };
 
   return (

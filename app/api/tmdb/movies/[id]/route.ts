@@ -1,14 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = process.env.TMDB_API_KEY;
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
+  const url = new URL(request.url);
+  const id = url.pathname.split("/").pop();
   try {
-    const response = await fetch(`${BASE_URL}/movie/${params.id}`, {
+    const response = await fetch(`${BASE_URL}/movie/${id}`, {
       method: "GET",
       headers: {
         accept: "application/json",
@@ -23,6 +22,7 @@ export async function GET(
     const data = await response.json();
     return NextResponse.json(data);
   } catch (err) {
+    console.error("TMDB API Error:", err);
     return NextResponse.json(
       { error: "Failed to fetch movie details" },
       { status: 500 }
