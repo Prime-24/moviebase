@@ -25,13 +25,11 @@ const SearchItem = ({ item, clearSearchTerm }: SearchItemProps) => {
         image: item.poster_path,
       };
     }
-    if (item.media_type === "person") {
-      return {
-        type: "Person",
-        path: `/person/${item.id}`,
-        image: item.profile_path,
-      };
-    }
+    return {
+      type: "Person",
+      path: `/person/${item.id}`,
+      image: item.profile_path,
+    };
   };
 
   const getMediaDate = (item: Media): string => {
@@ -54,7 +52,7 @@ const SearchItem = ({ item, clearSearchTerm }: SearchItemProps) => {
 
   return (
     <Link
-      href={getMediaInfo(item)?.path!}
+      href={getMediaInfo(item)?.path}
       key={item.id}
       onClick={clearSearchTerm}
       className="flex gap-2 rounded-md overflow-clip shadow-lg glass text-gray-800">

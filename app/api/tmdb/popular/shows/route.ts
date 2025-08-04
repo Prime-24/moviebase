@@ -20,6 +20,7 @@ export async function GET() {
     const data = await response.json();
     return NextResponse.json(data);
   } catch (err) {
+    console.error("TMDB API Error:", err);
     return NextResponse.json(
       { error: "Failed to fetch popular shows" },
       { status: 500 }

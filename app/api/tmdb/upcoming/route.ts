@@ -4,7 +4,6 @@ const BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = process.env.TMDB_API_KEY;
 
 export async function GET() {
-    console.log("get function")
   try {
     const response = await fetch(`${BASE_URL}/movie/upcoming`, {
       method: "GET",
@@ -21,6 +20,7 @@ export async function GET() {
     const data = await response.json();
     return NextResponse.json(data);
   } catch (err) {
+    console.error("TMDB API Error:", err);
     return NextResponse.json(
       { error: "Failed to fetch upcoming movies" },
       { status: 500 }
