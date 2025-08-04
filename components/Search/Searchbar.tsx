@@ -66,9 +66,11 @@ const Searchbar = () => {
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Escape") clearSearchTerm();
-    if (event.key === "Enter") {
-      router.push(`/search/${encodeURIComponent(searchTerm)}?page=1`);
-      clearSearchTerm();
+    if (searchTerm.length >= 3) {
+      if (event.key === "Enter") {
+        router.push(`/search/${encodeURIComponent(searchTerm)}?page=1`);
+        clearSearchTerm();
+      }
     }
   };
 

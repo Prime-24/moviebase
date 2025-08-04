@@ -18,7 +18,8 @@ const Home = async () => {
     fetchPopularMovies(),
     fetchPopularShows(),
   ]);
-  return (
+
+    return (
     <div className="flex flex-col gap-4 mt-8">
       <section className="flex flex-col gap-4">
         <h1 className="text-3xl">Upcoming movies</h1>
