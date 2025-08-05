@@ -1,28 +1,13 @@
 import { NextResponse } from "next/server";
-
-const BASE_URL = "https://api.themoviedb.org/3";
-const API_KEY = process.env.TMDB_API_KEY;
+import { fetchPopularMovies } from "@/lib/tmdb";
 
 export async function GET() {
   try {
-    const response = await fetch(`${BASE_URL}/movie/popular`, {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${API_KEY}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
-
-    const data = await response.json();
+    const data = await fetchPopularMovies();
     return NextResponse.json(data);
   } catch (err) {
-    console.error("TMDB API Error:", err);
     return NextResponse.json(
-      { error: "Failed to fetch popular movies" },
+      { error: (err as Error).message },
       { status: 500 }
     );
   }
