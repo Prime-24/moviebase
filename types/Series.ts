@@ -69,7 +69,6 @@ export type TVGenre = {
   [id: number]: string;
 };
 
-// Lookup object for TV genres
 export const TVGenres: TVGenre = {
   10759: "Action & Adventure",
   16: "Animation",

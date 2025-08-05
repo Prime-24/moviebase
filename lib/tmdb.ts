@@ -1,7 +1,6 @@
 import { Movies } from "@/types/Movies";
 import { SearchResult } from "@/types/SearchResult";
 
-// lib/tmdb.ts
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = process.env.TMDB_API_KEY;
 
@@ -71,4 +70,3 @@ export const fetchDiscoverMovies = async (
   const data: Movies = await response.json();
   return data;
 };
-// fetchFromTMDB(`/discover/movie?${queryParams}`);

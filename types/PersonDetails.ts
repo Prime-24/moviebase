@@ -8,7 +8,7 @@ export type PersonDetails = BaseMedia & {
   biography: string;
   birthday: string | null;
   deathday: string | null;
-  gender: number; // 1 = female, 2 = male, 0/3 = other/unspecified
+  gender: number;
   place_of_birth: string | null;
   popularity: number;
   profile_path: string | null;
