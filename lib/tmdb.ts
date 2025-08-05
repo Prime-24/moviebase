@@ -1,90 +1,74 @@
-export const fetchMultiSearch = async (searchTerm: string, page?: string) => {
+import { Movies } from "@/types/Movies";
+import { SearchResult } from "@/types/SearchResult";
+
+// lib/tmdb.ts
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+const API_KEY = process.env.TMDB_API_KEY;
+
+const fetchFromTMDB = async (endpoint: string) => {
+  const res = await fetch(`${TMDB_BASE_URL}${endpoint}`, {
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${API_KEY}`,
+    },
+  });
+
+  if (!res.ok) {
+    let errorMessage = `Failed with status ${res.status}`;
+    try {
+      const errorData = await res.json();
+      errorMessage = errorData.status_message || errorMessage;
+    } catch {}
+    throw new Error(errorMessage);
+  }
+
+  return res.json();
+};
+
+export const fetchMultiSearch = async (
+  searchTerm: string,
+  page: string = "1"
+): Promise<SearchResult> => {
   const response = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_BASE_URL
-    }/api/tmdb/search?query=${searchTerm}&page=${page || "1"}`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tmdb/search?query=${searchTerm}&page=${page}`
   );
+
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.error || "Failed to fetch search results");
   }
-  return await response.json();
+
+  const data: SearchResult = await response.json();
+  return data;
 };
 
-export const fetchMovieDetails = async (id: number) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tmdb/movies/${id}`
-  );
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to fetch movie details");
-  }
-  return await response.json();
-};
+export const fetchMovieDetails = async (id: number) =>
+  fetchFromTMDB(`/movie/${id}`);
 
-export const fetchSeriesDetails = async (id: number) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tmdb/tv/${id}`
-  );
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to fetch series details");
-  }
-  return await response.json();
-};
+export const fetchSeriesDetails = async (id: number) =>
+  fetchFromTMDB(`/tv/${id}`);
 
-export const fetchPersonDetails = async (id: number) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tmdb/person/${id}`
-  );
-  if (!response.ok) {
-    throw new Error(`API request failed with status ${response.status}`);
-  }
-  return await response.json();
-};
+export const fetchPersonDetails = async (id: number) =>
+  fetchFromTMDB(`/person/${id}`);
 
-export const fetchUpcomingMovies = async () => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tmdb/upcoming`
-  );
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to fetch upcoming movies");
-  }
-  return await response.json();
-};
+export const fetchUpcomingMovies = async () => fetchFromTMDB(`/movie/upcoming`);
 
-export const fetchPopularMovies = async () => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tmdb/popular/movies`
-  );
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to fetch popular movies");
-  }
-  return await response.json();
-};
+export const fetchPopularMovies = async () => fetchFromTMDB(`/movie/popular`);
 
-export const fetchPopularShows = async () => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/tmdb/popular/shows`
-  );
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to fetch popular shows");
-  }
-  return await response.json();
-};
+export const fetchPopularShows = async () => fetchFromTMDB(`/tv/popular`);
 
-export const fetchDiscoverMovies = async (queryParams?: string) => {
-  if (queryParams === undefined) queryParams = "";
-
+export const fetchDiscoverMovies = async (
+  queryParams: string = ""
+): Promise<Movies> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/tmdb/discover/movies?${queryParams}`
   );
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to fetch filtered movies");
+    throw new Error(errorData.error || "Failed to fetch search results");
   }
-  return await response.json();
+
+  const data: Movies = await response.json();
+  return data;
 };
+// fetchFromTMDB(`/discover/movie?${queryParams}`);

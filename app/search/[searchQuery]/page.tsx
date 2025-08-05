@@ -13,13 +13,16 @@ const SearchQueryPage = async ({
   params,
   searchParams,
 }: SearchQueryPageProps) => {
-  const { searchQuery } = await params;
-  const { page } = await searchParams;
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
 
-  const data: SearchResult = await fetchMultiSearch(
-    searchQuery,
-    page?.toString()
-  );
+  const { searchQuery } = resolvedParams;
+
+  const page = Array.isArray(resolvedSearchParams.page)
+    ? resolvedSearchParams.page[0]
+    : resolvedSearchParams.page || "1";
+
+  const data: SearchResult = await fetchMultiSearch(searchQuery, page);
 
   const getMediaInfo = (item: Media) => {
     if (item.media_type === "movie") {
@@ -36,37 +39,39 @@ const SearchQueryPage = async ({
         image: item.poster_path,
       };
     }
-    // if (item.media_type === "person") {
     return {
       type: "Person",
       path: `/person/${item.id}`,
       image: item.profile_path,
     };
-    // }
   };
+
   return (
     <>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(min(150px,100%),1fr))] gap-4">
-        {data?.results?.map((m: Media) => (
-          <Link
-            key={m.id}
-            href={getMediaInfo(m)?.path}
-            className="flex flex-col gap-2 glass rounded-md shadow-md border border-transparent hover:border-white hover:cursor-pointer">
-            <Image
-              className="w-full object-cover rounded-t-md flex-[2]"
-              src={imageUrlHelper(getMediaInfo(m)?.image)}
-              height={150}
-              width={100}
-              alt="Image of popular media"
-            />
-            <h2 className="flex items-center justify-center flex-1 p-2 text-center">
-              {"title" in m ? m.title : m.name}
-            </h2>
-          </Link>
-        ))}
+        {data?.results?.map((m: Media) => {
+          const { path, image } = getMediaInfo(m);
+          return (
+            <Link
+              key={m.id}
+              href={path}
+              className="flex flex-col gap-2 glass rounded-md shadow-md border border-transparent hover:border-white hover:cursor-pointer">
+              <Image
+                className="w-full object-cover rounded-t-md flex-[2]"
+                src={imageUrlHelper(image)}
+                height={150}
+                width={100}
+                alt={"title" in m ? m.title : m.name}
+              />
+              <h2 className="flex items-center justify-center flex-1 p-2 text-center">
+                {"title" in m ? m.title : m.name}
+              </h2>
+            </Link>
+          );
+        })}
       </div>
 
-      {data.total_pages === 1 ? null : (
+      {data.total_pages > 1 && (
         <div className="flex gap-4 mt-4 justify-center items-center">
           {Number(page) > 1 && (
             <Link
@@ -77,8 +82,9 @@ const SearchQueryPage = async ({
           )}
 
           <span>
-            {page}/{data.total_pages}
+            Page {page} of {data.total_pages}
           </span>
+
           {Number(page) < data.total_pages && (
             <Link
               href={`?page=${Number(page) + 1}`}
