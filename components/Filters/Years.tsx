@@ -16,6 +16,7 @@ const Years = ({ name, label, value }: YearsProps) => {
         name={name}
         id={name}
         defaultValue={value}
+        aria-label={label}
       />
     </div>
   );

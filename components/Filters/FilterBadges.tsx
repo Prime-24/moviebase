@@ -41,8 +41,9 @@ const FilterBadges = ({ filters, onRemove }: FilterBadgesProps) => {
           <span>{getNames(filter)}</span>
           <button
             onClick={() => onRemove(filter.key, filter.value)}
-            className="ml-2 text-gray-800 hover:text-gray-700 cursor-pointer">
-            <X />
+            className="ml-2 text-gray-800 hover:text-gray-700 cursor-pointer"
+            aria-label="Remove filter">
+            <X aria-hidden={true} />
           </button>
         </div>
       ))}

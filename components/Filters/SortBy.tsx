@@ -13,9 +13,13 @@ const SortyBy = ({ value }: SortByProps) => {
         className="border border-gray-600 py-2 px-4 rounded-md cursor-pointer"
         defaultValue={value}
         name="sort_by"
-        id="sort_by">
+        id="sort_by"
+        aria-label="Sorting movies by">
         {TMDB_SORT_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value} className="text-black">
+          <option
+            key={option.value}
+            value={option.value}
+            className="text-black">
             {option.label}
           </option>
         ))}

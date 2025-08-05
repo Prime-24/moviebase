@@ -20,6 +20,7 @@ const MediaCard = ({ media, isMovie }: MediaCard) => {
 
   return (
     <Link
+      role="listitem"
       href={getLink(media)}
       className="flex flex-col gap-2 glass rounded-md shadow-md border border-transparent hover:border-white hover:cursor-pointer">
       <Image

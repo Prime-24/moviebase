@@ -31,6 +31,7 @@ const Vote = ({ name, defaultValue, label }: VoteProps) => {
         step={1}
         value={vote}
         onChange={handleInputChange}
+        aria-label={label}
       />
     </div>
   );
