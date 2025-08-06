@@ -1,47 +1,49 @@
-"use client";
-import { fetchDiscoverMovies } from "@/lib/tmdb";
-import { Movies } from "@/types/Movies";
 import Filter from "@/components/Filters/Filter";
-import { useEffect, useState } from "react";
-import MediaCard from "@/components/MediaCard";
 import Pagination from "@/components/Pagination";
-import { useMovieFilter } from "@/hooks/useMovieFilter";
 import FilterBadges from "@/components/Filters/FilterBadges";
+import { Movies } from "@/types/Movies";
+import MediaCard from "@/components/MediaCard";
+import { Filters } from "@/types/Filters";
+import { fetchDiscoverMovies } from "@/lib/tmdb";
 
-const MoviesPage = () => {
-  const [movies, setMovies] = useState<Movies>();
+type MoviePageProps = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
+const MoviesPage = async ({ searchParams }: MoviePageProps) => {
   const {
-    currentFilters,
-    handlePageChange,
-    formSubmit,
-    handleReset,
-    searchParams,
-    getActiveFilters,
-    handleRemoveFilter,
-  } = useMovieFilter();
+    sort_by,
+    with_genres,
+    "primary_release_date.gte": releaseDateGte,
+    "primary_release_date.lte": releaseDateLte,
+    "vote_average.gte": voteAverageGte,
+    "vote_average.lte": voteAverageLte,
+    page,
+  } = await searchParams;
 
-  useEffect(() => {
-    const fetchmovies = async () => {
-      const movies = await fetchDiscoverMovies(searchParams.toString());
-      setMovies(movies);
-    };
-    fetchmovies();
-  }, [searchParams]);
+  const filters: Filters = {
+    sort_by: sort_by?.toString() || "popularity.desc",
+    with_genres: with_genres?.toString() || "",
+    "primary_release_date.gte": releaseDateGte?.toString() || "",
+    "primary_release_date.lte": releaseDateLte?.toString() || "",
+    "vote_average.gte": voteAverageGte?.toString() || "",
+    "vote_average.lte": voteAverageLte?.toString() || "",
+    page: Number(page?.toString()) || 1,
+  };
+
+  const queryString = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(filters)) {
+    if (value) queryString.set(key, String(value));
+  }
+
+  const movies: Movies = await fetchDiscoverMovies(queryString.toString());
 
   return (
     <div className="flex flex-col md:flex-row gap-4">
       <div className="flex flex-col gap-4 flex-1">
-        <Filter
-          filters={currentFilters}
-          onFormSubmit={formSubmit}
-          onReset={handleReset}
-          searchParams={searchParams.toString()}
-        />
-        <FilterBadges
-          filters={getActiveFilters()}
-          onRemove={handleRemoveFilter}
-        />
+        <Filter filters={filters} />
+        <FilterBadges />
       </div>
       <div className="flex-[3]">
         <div className="grid grid-cols-[repeat(auto-fill,minmax(min(150px,100%),1fr))] gap-2">
@@ -49,13 +51,11 @@ const MoviesPage = () => {
             <MediaCard key={movie.id} media={movie} isMovie={true} />
           ))}
         </div>
-        {movies && (
-          <Pagination
-            currentPage={currentFilters.page}
-            totalPages={movies?.total_pages}
-            onPageChange={handlePageChange}
-          />
-        )}
+        <Pagination
+          currentPage={movies.page}
+          totalPages={movies.total_pages}
+          searchParams={queryString}
+        />
       </div>
     </div>
   );

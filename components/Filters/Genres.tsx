@@ -4,16 +4,17 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type GenresProps = {
-  selectedGenres: string[];
+  selectedGenres: string;
 };
 
 const Genres = ({ selectedGenres }: GenresProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [localSelectedGenres, setLocalSelectedGenres] =
-    useState<string[]>(selectedGenres);
+  const [localSelectedGenres, setLocalSelectedGenres] = useState<string[]>(
+    selectedGenres.split(",")
+  );
 
   useEffect(() => {
-    setLocalSelectedGenres(selectedGenres);
+    setLocalSelectedGenres(selectedGenres.split(","));
   }, [selectedGenres]);
 
   const toggleDropdown = () => {

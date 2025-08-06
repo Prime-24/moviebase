@@ -5,9 +5,9 @@ const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 export async function GET(req: NextRequest) {
   try {
-    const queryParams = new URL(req.url).searchParams.toString();
+    const searchParams = req.nextUrl.searchParams;
     const response = await fetch(
-      `${TMDB_BASE_URL}/discover/movie?${queryParams}`,
+      `${TMDB_BASE_URL}/discover/movie?${searchParams}`,
       {
         headers: {
           accept: "application/json",

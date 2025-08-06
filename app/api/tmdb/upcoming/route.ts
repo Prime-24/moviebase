@@ -1,9 +1,22 @@
-import { NextResponse } from "next/server";
-import { fetchUpcomingMovies } from "@/lib/tmdb";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
+
+export async function GET(req: NextRequest) {
   try {
-    const data = await fetchUpcomingMovies();
+    const response = await fetch(`${TMDB_BASE_URL}/movie/upcoming`, {
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${TMDB_API_KEY}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`TMDB request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
     return NextResponse.json(data);
   } catch (err) {
     return NextResponse.json(

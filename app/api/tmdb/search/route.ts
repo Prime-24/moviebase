@@ -4,22 +4,11 @@ const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const query = searchParams.get("query");
-  const page = searchParams.get("page") || "1";
-
-  if (!query) {
-    return NextResponse.json(
-      { error: "Missing search query" },
-      { status: 400 }
-    );
-  }
+  const searchParams = req.nextUrl.searchParams;
 
   try {
     const response = await fetch(
-      `${TMDB_BASE_URL}/search/multi?query=${encodeURIComponent(
-        query
-      )}&page=${page}`,
+      `${TMDB_BASE_URL}/search/multi?${searchParams.toString()}`,
       {
         headers: {
           accept: "application/json",

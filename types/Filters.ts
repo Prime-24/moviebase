@@ -38,8 +38,8 @@ export type TMDBSortBy =
   | "vote_count.desc";
 
 export type Filters = {
-  sort_by: TMDBSortBy;
-  with_genres: string[];
+  sort_by: string;
+  with_genres: string;
   "primary_release_date.gte": string;
   "primary_release_date.lte": string;
   "vote_average.gte": string;

@@ -9,15 +9,18 @@ import { Movies, UpcomingMovies } from "@/types/Movies";
 import { Shows } from "@/types/Series";
 
 export default async function Home() {
-  const [upcomingMovies, popularMovies, popularShows]: [
-    UpcomingMovies,
-    Movies,
-    Shows
-  ] = await Promise.all([
-    fetchUpcomingMovies(),
-    fetchPopularMovies(),
-    fetchPopularShows(),
-  ]);
+
+  const upcomingMovies = await fetchUpcomingMovies();
+
+  // const [upcomingMovies, popularMovies, popularShows]: [
+  //   UpcomingMovies,
+  //   Movies,
+  //   Shows
+  // ] = await Promise.all([
+  //   fetchUpcomingMovies(),
+  //   fetchPopularMovies(),
+  //   fetchPopularShows(),
+  // ]);
 
   return (
     <div className="flex flex-col gap-4 mt-8">
@@ -26,7 +29,7 @@ export default async function Home() {
         <Slider upcomingMovies={upcomingMovies} />
       </section>
 
-      <section className="flex flex-col gap-4">
+      {/* <section className="flex flex-col gap-4">
         <h2 className="text-3xl">Popular Movies</h2>
         <MediaCards media={popularMovies} isMovie />
       </section>
@@ -34,7 +37,7 @@ export default async function Home() {
       <section className="flex flex-col gap-4">
         <h2 className="text-3xl">Popular Shows</h2>
         <MediaCards media={popularShows} isMovie={false} />
-      </section>
+      </section> */}
     </div>
   );
 }

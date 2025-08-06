@@ -1,18 +1,13 @@
 "use client";
-
-import { TMDB_SORT_OPTIONS } from "@/types/Filters";
+import { Filters, TMDB_SORT_OPTIONS } from "@/types/Filters";
 import { MovieGenres } from "@/types/Movies";
 import { X } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface FilterBadge {
   key: string;
   value: string;
   label: string;
-}
-
-interface FilterBadgesProps {
-  filters: FilterBadge[];
-  onRemove: (key: string, value: string) => void;
 }
 
 const getNames = (filter: FilterBadge) => {
@@ -29,18 +24,62 @@ const getNames = (filter: FilterBadge) => {
   return `${filter.label} ${filter.value}`;
 };
 
-const FilterBadges = ({ filters, onRemove }: FilterBadgesProps) => {
-  if (filters.length === 0) return null;
+const getLabel = (key: string) => {
+  const filterLabels: Record<keyof Filters, string> = {
+    with_genres: "Genres",
+    sort_by: "Sort By",
+    "vote_average.gte": "Min Vote Average",
+    "vote_average.lte": "Max Vote Average",
+    "primary_release_date.lte": "Release Before",
+    "primary_release_date.gte": "Release After",
+    page: "Page",
+  };
+  return filterLabels[key as keyof Filters] || key;
+};
+
+const FilterBadges = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const activeFilters: { key: string; value: string; label: string }[] = [];
+
+  searchParams.forEach((v, k) => {
+    if (k === "page") return;
+    if (k === "with_genres") {
+      v.split(",").forEach((element) =>
+        activeFilters.push({ key: k, value: element, label: getLabel(k) })
+      );
+    } else {
+      activeFilters.push({ key: k, value: v, label: getLabel(k) });
+    }
+  });
+
+  const handleRemoveFilter = (key: string, value: string) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+
+    const genres = newParams.get(key)?.split(",") || [];
+
+    if (key === "with_genres" && genres?.length > 1) {
+      const filteredGenres = genres.filter((g) => g != value);
+      newParams.set(key, filteredGenres.toString());
+    } else {
+      newParams.delete(key, value);
+    }
+
+    newParams.set("page", "1");
+    router.push(`/movies?${newParams.toString()}`);
+  };
+
+  if (activeFilters.length === 0) return null;
 
   return (
     <div className="flex flex-wrap gap-2 mb-4">
-      {filters.map((filter) => (
+      {activeFilters.map((filter) => (
         <div
           key={`${filter.key}-${filter.value}`}
           className="flex items-center bg-gray-200 dark:bg-gray-500 rounded-full px-3 py-1 text-sm">
           <span>{getNames(filter)}</span>
           <button
-            onClick={() => onRemove(filter.key, filter.value)}
+            onClick={() => handleRemoveFilter(filter.key, filter.value)}
             className="ml-2 text-gray-800 hover:text-gray-700 cursor-pointer"
             aria-label="Remove filter">
             <X aria-hidden={true} />
