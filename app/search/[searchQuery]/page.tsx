@@ -18,9 +18,7 @@ const SearchQueryPage = async ({
 
   const { searchQuery } = resolvedParams;
 
-  const page = Array.isArray(resolvedSearchParams.page)
-    ? resolvedSearchParams.page[0]
-    : resolvedSearchParams.page || "1";
+  const page = resolvedSearchParams.page?.toString() || "1";
 
   const data: SearchResult = await fetchMultiSearch(searchQuery, page);
 
