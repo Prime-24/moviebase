@@ -24,10 +24,7 @@ const fetchFromTMDB = async (endpoint: string) => {
   return data;
 };
 
-export const fetchMultiSearch = async (
-  searchTerm: string,
-  page: string = "1"
-): Promise<SearchResult> => {
+export const fetchMultiSearch = async (searchTerm: string, page: string) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/tmdb/search?query=${searchTerm}&page=${page}`
   );
