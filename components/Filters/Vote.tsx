@@ -1,3 +1,4 @@
+"use client";
 import { Filters } from "@/types/Filters";
 import { ChangeEvent, useEffect, useState } from "react";
 

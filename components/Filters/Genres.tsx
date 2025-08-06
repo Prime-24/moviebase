@@ -1,19 +1,22 @@
 "use client";
 import { MovieGenres } from "@/types/Movies";
+import { TVGenres } from "@/types/Series";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type GenresProps = {
-  selectedGenres: string[];
+  selectedGenres: string;
+  isMovie?: boolean;
 };
 
-const Genres = ({ selectedGenres }: GenresProps) => {
+const Genres = ({ selectedGenres, isMovie }: GenresProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [localSelectedGenres, setLocalSelectedGenres] =
-    useState<string[]>(selectedGenres);
+  const [localSelectedGenres, setLocalSelectedGenres] = useState<string[]>(
+    selectedGenres.split(",")
+  );
 
   useEffect(() => {
-    setLocalSelectedGenres(selectedGenres);
+    setLocalSelectedGenres(selectedGenres.split(","));
   }, [selectedGenres]);
 
   const toggleDropdown = () => {
@@ -28,6 +31,10 @@ const Genres = ({ selectedGenres }: GenresProps) => {
         return [...prev, id];
       }
     });
+  };
+
+  const getMediaGenres = () => {
+    return isMovie ? MovieGenres : TVGenres;
   };
 
   return (
@@ -55,7 +62,7 @@ const Genres = ({ selectedGenres }: GenresProps) => {
             : "opacity-0 translate-y-[-10px] pointer-events-none"
         }`}>
         <ul className="flex flex-col gap-2 cursor-pointer">
-          {Object.entries(MovieGenres).map(([id, name]) => (
+          {Object.entries(getMediaGenres()).map(([id, name]) => (
             <li key={id} className="flex gap-2 cursor-pointer">
               <input
                 type="checkbox"

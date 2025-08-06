@@ -1,4 +1,3 @@
-"use client";
 import { TMDB_SORT_OPTIONS } from "@/types/Filters";
 
 type SortByProps = {

@@ -31,7 +31,7 @@ const Searchbar = () => {
     }
 
     const fetchData = () => {
-      const data = fetchMultiSearch(searchTerm);
+      const data = fetchMultiSearch(searchTerm, "1");
       setMedia(data);
     };
 
