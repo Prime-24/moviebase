@@ -9,10 +9,13 @@ import { useMovieFilter } from "@/hooks/useMovieFilter";
 
 type FilterProps = {
   filters: Filters;
+  isMovie: boolean;
 };
 
-const Filter = ({ filters }: FilterProps) => {
-  const { handleReset, formSubmit } = useMovieFilter(filters);
+const Filter = ({ filters, isMovie }: FilterProps) => {
+  const { handleReset, formSubmit } = useMovieFilter(filters, isMovie);
+
+  console.log(isMovie);
 
   return (
     <Form
@@ -24,6 +27,7 @@ const Filter = ({ filters }: FilterProps) => {
       <Genres
         selectedGenres={filters.with_genres.toString()}
         aria-label="Select genres"
+        isMovie={isMovie}
       />
       <div className="flex gap-4">
         <Vote

@@ -1,6 +1,7 @@
 "use client";
 import { Filters, TMDB_SORT_OPTIONS } from "@/types/Filters";
 import { MovieGenres } from "@/types/Movies";
+import { TVGenres } from "@/types/Series";
 import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -9,20 +10,6 @@ interface FilterBadge {
   value: string;
   label: string;
 }
-
-const getNames = (filter: FilterBadge) => {
-  if (filter.key === "sort_by") {
-    const element = TMDB_SORT_OPTIONS.find(
-      (element) => element.value === filter.value
-    );
-    return `${filter.label}: ${element?.label}`;
-  }
-  if (filter.key === "with_genres") {
-    return `${filter.label}: ${MovieGenres[Number(filter.value)]}`;
-  }
-
-  return `${filter.label} ${filter.value}`;
-};
 
 const getLabel = (key: string) => {
   const filterLabels: Record<keyof Filters, string> = {
@@ -37,10 +24,31 @@ const getLabel = (key: string) => {
   return filterLabels[key as keyof Filters] || key;
 };
 
-const FilterBadges = () => {
+type FilterBadgesProps = {
+  isMovie: boolean;
+};
+
+const FilterBadges = ({ isMovie }: FilterBadgesProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const activeFilters: { key: string; value: string; label: string }[] = [];
+
+  const getNames = (filter: FilterBadge) => {
+    if (filter.key === "sort_by") {
+      const element = TMDB_SORT_OPTIONS.find(
+        (element) => element.value === filter.value
+      );
+      return `${filter.label}: ${element?.label}`;
+    }
+    if (filter.key === "with_genres") {
+      if (isMovie) {
+        return `${filter.label}: ${MovieGenres[Number(filter.value)]}`;
+      }
+      return `${filter.label}: ${TVGenres[Number(filter.value)]}`;
+    }
+
+    return `${filter.label} ${filter.value}`;
+  };
 
   searchParams.forEach((v, k) => {
     if (k === "page") return;
@@ -66,7 +74,11 @@ const FilterBadges = () => {
     }
 
     newParams.set("page", "1");
-    router.push(`/movies?${newParams.toString()}`);
+    if (isMovie) {
+      router.push(`/movies?${newParams.toString()}`);
+    } else {
+      router.push(`/series?${newParams.toString()}`);
+    }
   };
 
   if (activeFilters.length === 0) return null;

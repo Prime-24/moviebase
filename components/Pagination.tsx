@@ -5,19 +5,25 @@ type PaginationProps = {
   currentPage: number;
   totalPages: number;
   searchParams: URLSearchParams;
+  isMovie: boolean;
 };
 
 const Pagination = ({
   currentPage,
   totalPages,
   searchParams,
+  isMovie,
 }: PaginationProps) => {
   const router = useRouter();
 
   const handleClick = (page: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", page.toString());
-    router.push(`/movies?${params.toString()}`);
+    if (isMovie) {
+      router.push(`/movies?${params.toString()}`);
+    } else {
+      router.push(`/series?${params.toString()}`);
+    }
   };
 
   if (totalPages === 1) return null;

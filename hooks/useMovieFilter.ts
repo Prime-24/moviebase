@@ -2,7 +2,7 @@ import { Filters } from "@/types/Filters";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent } from "react";
 
-export const useMovieFilter = (filters: Filters) => {
+export const useMovieFilter = (filters: Filters, isMovie: boolean) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -30,13 +30,20 @@ export const useMovieFilter = (filters: Filters) => {
 
     filters.page = 1;
     params.set("page", filters.page.toString());
-    router.push("/movies?" + params.toString());
+    if (isMovie) {
+      router.push("/movies?" + params.toString());
+    } else {
+      router.push("/series?" + params.toString());
+    }
   };
 
   const handleReset = () => {
-    router.push("/movies");
+    if (isMovie) {
+      router.push("/movies");
+    } else {
+      router.push("/series");
+    }
   };
 
-  return {formSubmit, handleReset}
-
+  return { formSubmit, handleReset };
 };

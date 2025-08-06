@@ -56,3 +56,6 @@ export const fetchPopularShows = async () => fetchFromTMDB(`/tv/popular`);
 export const fetchDiscoverMovies = async (queryParams: string) => {
   return await fetchFromTMDB(`/discover/movie?${queryParams}`);
 };
+export const fetchDiscoverSeries = async (queryParams: string) => {
+  return await fetchFromTMDB(`/discover/tv?${queryParams}`);
+};
