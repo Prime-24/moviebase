@@ -12,17 +12,17 @@ type SlideProps = {
 const Slide = ({ movie, imageIndex }: SlideProps) => {
   return (
     <div
-      className="relative flex w-full h-full object-cover shrink-0 grow-0 items-center transition-transform duration-300"
+      className="relative flex w-full shrink-0 transition-transform duration-300"
       style={{ translate: `${-100 * imageIndex}%` }}
       aria-live="polite"
       aria-atomic="true">
       <Image
         priority={true}
-        className="absolute w-full h-full object-cover -z-10 brightness-50"
+        className="absolute inset-0 h-full w-full object-cover -z-10 brightness-50"
         src={imageUrlHelper(movie.backdrop_path)}
-        style={{ objectFit: "cover" }}
-        fill={true}
         alt="Image of upcoming movie"
+        width={1280}
+        height={720}
         aria-hidden="true"
       />
       <div className="flex gap-2 p-4 backdrop-blur-xs">
