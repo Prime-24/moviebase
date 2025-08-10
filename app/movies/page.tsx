@@ -43,7 +43,7 @@ const MoviesPage = async ({ searchParams }: MoviePageProps) => {
     <div className="flex flex-col md:flex-row gap-4">
       <div className="flex flex-col gap-4 flex-1">
         <Filter isMovie={true} filters={filters} />
-        <FilterBadges isMovie={false} />
+        <FilterBadges isMovie={true} />
       </div>
       <div className="flex-[3]">
         <div className="grid grid-cols-[repeat(auto-fill,minmax(min(150px,100%),1fr))] gap-2">
