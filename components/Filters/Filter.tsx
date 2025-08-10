@@ -15,8 +15,6 @@ type FilterProps = {
 const Filter = ({ filters, isMovie }: FilterProps) => {
   const { handleReset, formSubmit } = useMovieFilter(filters, isMovie);
 
-  console.log(isMovie);
-
   return (
     <Form
       action={""}
